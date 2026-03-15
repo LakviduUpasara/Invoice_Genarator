@@ -1,13 +1,12 @@
 "use client";
 
-import { Building2, Mail, Phone } from "lucide-react";
-import Image from "next/image";
+import { Building2 } from "lucide-react";
 import type { CompanyInfo, InvoiceMeta } from "@/types/invoice";
 
 interface InvoiceHeaderProps {
   company: CompanyInfo;
   meta: InvoiceMeta;
-  logoUrl?: string | null;
+  logoUrl: string | null;
   onCompanyChange: (field: keyof CompanyInfo, value: string) => void;
   onMetaChange: (field: keyof InvoiceMeta, value: string) => void;
 }
@@ -36,75 +35,52 @@ export function InvoiceHeader({
   const initials = getInitials(company.name);
 
   return (
-    <header className="invoice-section grid grid-cols-1 gap-8 border-b border-slate-200 pb-8 md:grid-cols-2 print:grid-cols-2 print:gap-10">
-      <div className="space-y-4 print:pr-4">
-        <div className="flex items-center gap-4">
-          <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border border-slate-200 bg-white text-invoice-primary shadow-sm print:border-slate-300 print:shadow-none">
-            {logoUrl ? (
-              <Image
-                src={logoUrl}
-                alt="Company logo"
-                fill
-                unoptimized
-                sizes="56px"
-                className="object-cover"
-              />
-            ) : (
-              <span className="text-sm font-extrabold tracking-wide">{initials}</span>
-            )}
-
-            {!logoUrl && (
-              <Building2 className="pointer-events-none absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-white text-slate-300 print:hidden" />
-            )}
-          </div>
-
-          <div className="min-w-0 flex-1">
-            <input
-              value={company.name}
-              onChange={(event) => onCompanyChange("name", event.target.value)}
-              className="w-full rounded-md border border-transparent bg-transparent px-2 py-1 text-2xl font-extrabold text-slate-900 outline-none transition focus:border-blue-200 focus:bg-slate-50 print:hidden"
-              aria-label="Company Name"
+    <header className="invoice-section grid gap-8 border-b border-slate-200 pb-8 md:grid-cols-2 print:grid-cols-2 print:gap-8 print:pb-6">
+      <div className="space-y-4 print:space-y-3">
+        <div className="w-full max-w-[340px] p-0">
+          {logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={logoUrl}
+              alt="Company logo"
+              className="block w-full h-auto object-contain object-left"
             />
-            <p className="hidden px-2 py-1 text-2xl font-extrabold text-slate-900 print:block">
-              {company.name}
-            </p>
-          </div>
+          ) : (
+            <div className="flex min-h-[70px] w-full items-center justify-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-invoice-primary text-sm font-extrabold text-white">
+                {initials}
+              </div>
+              <Building2 className="h-5 w-5 text-slate-300" />
+            </div>
+          )}
         </div>
 
         <div className="space-y-3 print:space-y-2">
           <div>
-            <label className="invoice-label">Address</label>
+            <label className="invoice-label print:hidden">Company Name</label>
+            <input
+              value={company.name}
+              onChange={(event) => onCompanyChange("name", event.target.value)}
+              className="invoice-input print:hidden"
+              aria-label="Company Name"
+            />
+            <p className="hidden px-3 py-2 text-sm font-semibold text-slate-900 print:block">
+              {company.name}
+            </p>
+          </div>
+
+          <div>
+            <label className="invoice-label print:hidden">Address</label>
             <textarea
               value={company.address}
               onChange={(event) => onCompanyChange("address", event.target.value)}
               className="invoice-textarea print:hidden"
               aria-label="Company Address"
+              placeholder={"No 123, Main Street, Colombo, Sri Lanka\n0771234567\ncompany@email.com"}
             />
             <p className="hidden whitespace-pre-line px-3 py-2 text-sm text-slate-700 print:block">
               {company.address}
             </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Phone className="h-4 w-4 text-slate-400" />
-            <input
-              value={company.phone}
-              onChange={(event) => onCompanyChange("phone", event.target.value)}
-              className="invoice-input print:hidden"
-              aria-label="Company Phone"
-            />
-            <span className="hidden text-sm text-slate-700 print:inline">{company.phone}</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Mail className="h-4 w-4 text-slate-400" />
-            <input
-              value={company.email}
-              onChange={(event) => onCompanyChange("email", event.target.value)}
-              className="invoice-input print:hidden"
-              aria-label="Company Email"
-            />
-            <span className="hidden text-sm text-slate-700 print:inline">{company.email}</span>
           </div>
         </div>
       </div>

@@ -33,14 +33,14 @@ export function InvoiceTable({
   onAddItem
 }: InvoiceTableProps) {
   return (
-    <section className="invoice-section mt-8">
+    <section className="invoice-section mt-8 print:mt-6">
       <div className="overflow-x-auto rounded-xl border border-slate-200 print:overflow-visible">
         <table className="min-w-full table-fixed border-collapse">
           <colgroup>
-            <col className="w-[44%]" />
-            <col className="w-[14%]" />
-            <col className="w-[16%]" />
-            <col className="w-[16%]" />
+            <col className="w-[50%]" />
+            <col className="w-[12%]" />
+            <col className="w-[18%]" />
+            <col className="w-[20%]" />
             <col className="w-[10%] print:hidden" />
           </colgroup>
           <thead>
