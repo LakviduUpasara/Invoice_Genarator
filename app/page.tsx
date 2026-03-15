@@ -12,7 +12,7 @@ import type { CompanyInfo, CustomerInfo, InvoiceItem, InvoiceMeta } from "@/type
 
 const initialCompany: CompanyInfo = {
   name: "Your Company Name",
-  address: "No 123, Main Street, Colombo, Sri Lanka",
+  address: "No 123, Main Street, Colombo, Sri Lanka\n0771234567\ncompany@email.com",
   phone: "0771234567",
   email: "company@email.com"
 };
@@ -24,8 +24,8 @@ const initialMeta: InvoiceMeta = {
 };
 
 const initialCustomer: CustomerInfo = {
-  name: "Customer Name",
-  address: "Customer address here..."
+  name: "Your Customer Name",
+  address: "No 123, Main Street, Colombo, Sri Lanka\n0771234567\ncompany@email.com"
 };
 
 const initialItems: InvoiceItem[] = [
@@ -107,7 +107,7 @@ export default function HomePage() {
 
         <main className="print-surface rounded-2xl border border-slate-200 bg-white shadow-xl md:min-h-[297mm] print:min-h-0 print:rounded-none">
           <div className="h-1 w-full rounded-t-2xl bg-invoice-accent print:rounded-none" />
-          <div className="space-y-8 p-5 sm:p-8 md:p-10 print:space-y-5 print:p-5">
+          <div className="space-y-7 p-5 sm:p-8 md:p-10 print:space-y-3.5 print:p-4">
             <InvoiceHeader
               company={company}
               meta={meta}
@@ -118,7 +118,7 @@ export default function HomePage() {
               onMetaChange={(field, value) => setMeta((previousMeta) => ({ ...previousMeta, [field]: value }))}
             />
 
-            <section className="invoice-section grid gap-5 md:grid-cols-2 print:grid-cols-2">
+            <section className="invoice-section space-y-4 print:space-y-3">
               <BillToCard
                 customer={customer}
                 onCustomerChange={(field, value) =>

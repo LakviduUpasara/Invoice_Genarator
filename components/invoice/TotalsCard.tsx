@@ -32,8 +32,8 @@ export function TotalsCard({
   onDiscountChange
 }: TotalsCardProps) {
   return (
-    <section className="invoice-section w-full max-w-sm rounded-xl border border-slate-200 bg-slate-50 p-5 print:ml-auto print:w-[44%] print:max-w-none">
-      <div className="space-y-3 text-sm">
+    <section className="invoice-section w-full max-w-sm rounded-xl border border-slate-200 bg-slate-50 p-5 print:ml-auto print:w-[44%] print:max-w-none print:p-3.5">
+      <div className="space-y-3 text-sm print:space-y-2 print:text-xs">
         <div className="flex items-center justify-between">
           <span className="text-slate-600">Subtotal</span>
           <span className="font-semibold text-slate-900">{formatCurrency(subtotal)}</span>
@@ -75,11 +75,13 @@ export function TotalsCard({
         </div>
       </div>
 
-      <div className="my-4 border-t border-slate-200" />
+      <div className="my-4 border-t border-slate-200 print:my-2.5" />
 
       <div className="flex items-center justify-between">
-        <span className="text-base font-semibold text-slate-700">Total</span>
-        <span className="text-2xl font-extrabold text-invoice-accent">{formatCurrency(total)}</span>
+        <span className="text-base font-semibold text-slate-700 print:text-sm">Total</span>
+        <span className="text-2xl font-extrabold text-invoice-accent print:text-lg">
+          {formatCurrency(total)}
+        </span>
       </div>
     </section>
   );

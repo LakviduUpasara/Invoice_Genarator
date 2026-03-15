@@ -9,12 +9,12 @@ interface BillToCardProps {
 
 export function BillToCard({ customer, onCustomerChange }: BillToCardProps) {
   return (
-    <section className="invoice-section rounded-xl border border-slate-200 bg-slate-50 p-5">
-      <h2 className="text-sm font-bold uppercase tracking-wide text-invoice-primary">Bill To</h2>
+    <section className="invoice-section">
+      <h2 className="text-sm font-bold uppercase tracking-wide text-invoice-primary">Invoice To</h2>
 
-      <div className="mt-4 space-y-3">
+      <div className="mt-3 space-y-3 print:mt-2 print:space-y-2">
         <div>
-          <label className="invoice-label">Customer Name</label>
+          <label className="invoice-label print:hidden">Customer Name</label>
           <input
             value={customer.name}
             onChange={(event) => onCustomerChange("name", event.target.value)}
@@ -27,12 +27,13 @@ export function BillToCard({ customer, onCustomerChange }: BillToCardProps) {
         </div>
 
         <div>
-          <label className="invoice-label">Customer Address</label>
+          <label className="invoice-label print:hidden">Address</label>
           <textarea
             value={customer.address}
             onChange={(event) => onCustomerChange("address", event.target.value)}
             className="invoice-textarea print:hidden"
             aria-label="Customer Address"
+            placeholder={"No 123, Main Street, Colombo, Sri Lanka\n0771234567\ncompany@email.com"}
           />
           <p className="hidden whitespace-pre-line px-3 py-2 text-sm text-slate-700 print:block">
             {customer.address}

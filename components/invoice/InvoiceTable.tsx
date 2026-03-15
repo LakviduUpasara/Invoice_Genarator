@@ -33,7 +33,7 @@ export function InvoiceTable({
   onAddItem
 }: InvoiceTableProps) {
   return (
-    <section className="invoice-section mt-8 print:mt-6">
+    <section className="invoice-section mt-6 print:mt-4">
       <div className="overflow-x-auto rounded-xl border border-slate-200 print:overflow-visible">
         <table className="min-w-full table-fixed border-collapse">
           <colgroup>
@@ -44,11 +44,11 @@ export function InvoiceTable({
             <col className="w-[10%] print:hidden" />
           </colgroup>
           <thead>
-            <tr className="bg-invoice-primary text-left text-sm font-semibold text-white">
-              <th className="rounded-tl-xl px-4 py-3">Description</th>
-              <th className="px-4 py-3">Qty</th>
-              <th className="px-4 py-3">Price</th>
-              <th className="px-4 py-3 print:rounded-tr-xl">Total</th>
+            <tr className="bg-invoice-primary text-left text-sm font-semibold text-white print:text-xs">
+              <th className="rounded-tl-xl px-4 py-3 print:px-3 print:py-2">Description</th>
+              <th className="px-4 py-3 print:px-3 print:py-2">Qty</th>
+              <th className="px-4 py-3 print:px-3 print:py-2">Price</th>
+              <th className="px-4 py-3 print:rounded-tr-xl print:px-3 print:py-2">Total</th>
               <th className="rounded-tr-xl px-4 py-3 text-center print:hidden">Action</th>
             </tr>
           </thead>
@@ -59,7 +59,7 @@ export function InvoiceTable({
 
               return (
                 <tr key={item.id}>
-                  <td className="px-4 py-3 align-top">
+                  <td className="px-4 py-3 align-top print:px-3 print:py-2">
                     <input
                       value={item.description}
                       onChange={(event) => onItemChange(item.id, "description", event.target.value)}
@@ -70,7 +70,7 @@ export function InvoiceTable({
                     <p className="hidden text-sm text-slate-700 print:block">{item.description || "-"}</p>
                   </td>
 
-                  <td className="px-4 py-3 align-top">
+                  <td className="px-4 py-3 align-top print:px-3 print:py-2">
                     <input
                       type="number"
                       min={0}
@@ -83,7 +83,7 @@ export function InvoiceTable({
                     <span className="hidden text-sm text-slate-700 print:inline">{item.qty}</span>
                   </td>
 
-                  <td className="px-4 py-3 align-top">
+                  <td className="px-4 py-3 align-top print:px-3 print:py-2">
                     <input
                       type="number"
                       min={0}
@@ -98,7 +98,7 @@ export function InvoiceTable({
                     </span>
                   </td>
 
-                  <td className="px-4 py-3 align-middle text-sm font-semibold text-slate-800">
+                  <td className="px-4 py-3 align-middle text-sm font-semibold text-slate-800 print:px-3 print:py-2">
                     {formatCurrency(rowTotal)}
                   </td>
 

@@ -35,8 +35,8 @@ export function InvoiceHeader({
   const initials = getInitials(company.name);
 
   return (
-    <header className="invoice-section grid gap-8 border-b border-slate-200 pb-8 md:grid-cols-2 print:grid-cols-2 print:gap-8 print:pb-6">
-      <div className="space-y-4 print:space-y-3">
+    <header className="invoice-section grid gap-7 border-b border-slate-200 pb-7 md:grid-cols-2 print:grid-cols-2 print:gap-6 print:pb-4">
+      <div className="space-y-3 print:space-y-2">
         <div className="w-full max-w-[340px] p-0">
           {logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -55,7 +55,7 @@ export function InvoiceHeader({
           )}
         </div>
 
-        <div className="space-y-3 print:space-y-2">
+        <div className="space-y-2.5 print:space-y-1.5">
           <div>
             <label className="invoice-label print:hidden">Company Name</label>
             <input
@@ -87,7 +87,7 @@ export function InvoiceHeader({
 
       <div className="md:justify-self-end md:text-right print:text-right">
         <h1 className="text-4xl font-extrabold tracking-tight text-invoice-primary">INVOICE</h1>
-        <div className="mt-6 space-y-4 print:space-y-3">
+        <div className="mt-5 space-y-3.5 print:space-y-2">
           <div>
             <label className="invoice-label md:text-right">Invoice No</label>
             <input
