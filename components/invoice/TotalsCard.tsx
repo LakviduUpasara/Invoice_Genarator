@@ -4,10 +4,13 @@ interface TotalsCardProps {
   subtotal: number;
   taxRate: number;
   taxAmount: number;
-  discount: number;
+  discountType: "amount" | "percent";
+  discountValue: number;
+  discountAmount: number;
   total: number;
   onTaxRateChange: (value: number) => void;
-  onDiscountChange: (value: number) => void;
+  onDiscountTypeChange: (value: "amount" | "percent") => void;
+  onDiscountValueChange: (value: number) => void;
 }
 
 function formatCurrency(value: number) {
@@ -26,10 +29,13 @@ export function TotalsCard({
   subtotal,
   taxRate,
   taxAmount,
-  discount,
+  discountType,
+  discountValue,
+  discountAmount,
   total,
   onTaxRateChange,
-  onDiscountChange
+  onDiscountTypeChange,
+  onDiscountValueChange
 }: TotalsCardProps) {
   return (
     <section className="invoice-section w-full max-w-sm rounded-xl border border-slate-200 bg-slate-50 p-5 print:ml-auto print:w-[44%] print:max-w-none print:p-3.5">
@@ -59,19 +65,42 @@ export function TotalsCard({
         </div>
 
         <div className="flex items-center justify-between gap-3">
-          <label className="text-slate-600">Discount</label>
+          <label className="text-slate-600">Discount Type</label>
+          <select
+            value={discountType}
+            onChange={(event) => onDiscountTypeChange(event.target.value as "amount" | "percent")}
+            className="invoice-input w-24 text-right print:hidden"
+            aria-label="Discount Type"
+          >
+            <option value="amount">Price</option>
+            <option value="percent">%</option>
+          </select>
+          <span className="hidden font-semibold text-slate-900 print:inline">
+            {discountType === "percent" ? "%" : "Price"}
+          </span>
+        </div>
+
+        <div className="flex items-center justify-between gap-3">
+          <label className="text-slate-600">{discountType === "percent" ? "Discount (%)" : "Discount"}</label>
           <input
             type="number"
             min={0}
-            step="0.01"
-            value={discount}
-            onChange={(event) => onDiscountChange(parseNumber(event.target.value))}
+            max={discountType === "percent" ? 100 : undefined}
+            step={discountType === "percent" ? "0.1" : "0.01"}
+            value={discountValue}
+            onChange={(event) => onDiscountValueChange(parseNumber(event.target.value))}
             className="invoice-input w-24 text-right print:hidden"
-            aria-label="Discount Amount"
+            aria-label="Discount Value"
+            placeholder={discountType === "percent" ? "10" : "0.00"}
           />
           <span className="hidden font-semibold text-slate-900 print:inline">
-            {formatCurrency(discount)}
+            {discountType === "percent" ? `${discountValue}%` : formatCurrency(discountValue)}
           </span>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <span className="text-slate-600">Discount Amount</span>
+          <span className="font-semibold text-slate-900">{formatCurrency(discountAmount)}</span>
         </div>
       </div>
 

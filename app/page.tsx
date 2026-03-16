@@ -1,7 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { BillToCard } from "@/components/invoice/BillToCard";
+import { useMemo, useRef, useState } from "react";
 import { FooterNote } from "@/components/invoice/FooterNote";
 import { InvoiceHeader } from "@/components/invoice/InvoiceHeader";
 import { InvoiceTable } from "@/components/invoice/InvoiceTable";
@@ -9,6 +8,9 @@ import { PaymentSummaryCard } from "@/components/invoice/PaymentSummaryCard";
 import { PrintActions } from "@/components/invoice/PrintActions";
 import { TotalsCard } from "@/components/invoice/TotalsCard";
 import type { CompanyInfo, CustomerInfo, InvoiceItem, InvoiceMeta } from "@/types/invoice";
+
+type PaymentStatus = "Paid" | "Unpaid" | "Partial" | "Overdue";
+type DiscountType = "amount" | "percent";
 
 const initialCompany: CompanyInfo = {
   name: "Your Company Name",
@@ -47,6 +49,7 @@ function createInvoiceItem(): InvoiceItem {
 }
 
 export default function HomePage() {
+  const invoiceRef = useRef<HTMLElement>(null);
   const [company, setCompany] = useState<CompanyInfo>(initialCompany);
   const [meta, setMeta] = useState<InvoiceMeta>(initialMeta);
   const [customer, setCustomer] = useState<CustomerInfo>(initialCustomer);
@@ -54,18 +57,31 @@ export default function HomePage() {
   const [paymentNote, setPaymentNote] = useState(
     "Please make the payment within the due date. Thank you for choosing our services."
   );
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("Unpaid");
+  const [accountDetails, setAccountDetails] = useState(
+    "Bank: ABC Bank\nAccount Name: Your Company Name\nAccount Number: 1234567890"
+  );
   const [items, setItems] = useState<InvoiceItem[]>(initialItems);
   const [taxRate, setTaxRate] = useState<number>(0);
-  const [discount, setDiscount] = useState<number>(0);
+  const [discountType, setDiscountType] = useState<DiscountType>("amount");
+  const [discountValue, setDiscountValue] = useState<number>(0);
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
 
   const subtotal = useMemo(
     () => items.reduce((accumulator, item) => accumulator + item.qty * item.price, 0),
     [items]
   );
   const taxAmount = useMemo(() => (subtotal * taxRate) / 100, [subtotal, taxRate]);
+  const discountAmount = useMemo(() => {
+    if (discountType === "percent") {
+      const safePercent = Math.max(0, Math.min(100, discountValue));
+      return ((subtotal + taxAmount) * safePercent) / 100;
+    }
+    return Math.max(0, discountValue);
+  }, [discountType, discountValue, subtotal, taxAmount]);
   const total = useMemo(
-    () => Math.max(0, subtotal + taxAmount - discount),
-    [subtotal, taxAmount, discount]
+    () => Math.max(0, subtotal + taxAmount - discountAmount),
+    [subtotal, taxAmount, discountAmount]
   );
 
   const handleLogoUpload = (file: File) => {
@@ -96,37 +112,93 @@ export default function HomePage() {
     setItems((previousItems) => [...previousItems, createInvoiceItem()]);
   };
 
+  const handleDownloadPdf = async () => {
+    if (!invoiceRef.current || isDownloading) {
+      return;
+    }
+
+    setIsDownloading(true);
+    try {
+      const headStyles = Array.from(
+        document.head.querySelectorAll("style, link[rel='stylesheet']")
+      )
+        .map((node) => node.outerHTML)
+        .join("");
+
+      const invoiceHtml = `
+        <div class="print-page mx-auto w-full max-w-[210mm] print:max-w-none">
+          ${invoiceRef.current.outerHTML}
+        </div>
+      `;
+
+      const response = await fetch("/api/invoice-pdf", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          invoiceHtml,
+          headStyles,
+          origin: window.location.origin,
+          fileName: meta.invoiceNumber || "invoice"
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("PDF generation request failed.");
+      }
+
+      const pdfBlob = await response.blob();
+      const downloadUrl = URL.createObjectURL(pdfBlob);
+      const anchor = document.createElement("a");
+      anchor.href = downloadUrl;
+      anchor.download = `${meta.invoiceNumber || "invoice"}.pdf`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(downloadUrl);
+    } catch {
+      window.alert("PDF generation failed. Please try again.");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-100 to-slate-200 px-4 py-10 sm:px-6 lg:px-8 print:min-h-0 print:bg-white print:px-0 print:py-0">
-      <div className="print-page mx-auto w-full max-w-[210mm] print:max-w-none">
+      <div data-invoice-page="true" className="print-page mx-auto w-full max-w-[210mm] print:max-w-none">
         <PrintActions
           hasLogo={Boolean(logoUrl)}
+          isDownloading={isDownloading}
           onUploadLogo={handleLogoUpload}
           onRemoveLogo={() => setLogoUrl(null)}
+          onPreviewPrint={() => window.print()}
+          onDownloadPdf={handleDownloadPdf}
         />
 
-        <main className="print-surface rounded-2xl border border-slate-200 bg-white shadow-xl md:min-h-[297mm] print:min-h-0 print:rounded-none">
+        <main
+          ref={invoiceRef}
+          data-invoice-root="true"
+          className="print-surface rounded-2xl bg-white shadow-xl md:min-h-[297mm] print:min-h-0 print:rounded-none"
+        >
           <div className="h-1 w-full rounded-t-2xl bg-invoice-accent print:rounded-none" />
-          <div className="space-y-7 p-5 sm:p-8 md:p-10 print:space-y-3.5 print:p-4">
+          <div className="space-y-7 p-5 sm:p-8 md:p-10 print:space-y-3 print:p-3">
             <InvoiceHeader
               company={company}
+              customer={customer}
               meta={meta}
+              balanceDue={total}
+              paymentStatus={paymentStatus}
               logoUrl={logoUrl}
               onCompanyChange={(field, value) =>
                 setCompany((previousCompany) => ({ ...previousCompany, [field]: value }))
               }
+              onCustomerChange={(field, value) =>
+                setCustomer((previousCustomer) => ({ ...previousCustomer, [field]: value }))
+              }
               onMetaChange={(field, value) => setMeta((previousMeta) => ({ ...previousMeta, [field]: value }))}
+              onPaymentStatusChange={setPaymentStatus}
             />
-
-            <section className="invoice-section space-y-4 print:space-y-3">
-              <BillToCard
-                customer={customer}
-                onCustomerChange={(field, value) =>
-                  setCustomer((previousCustomer) => ({ ...previousCustomer, [field]: value }))
-                }
-              />
-              <PaymentSummaryCard note={paymentNote} onChange={setPaymentNote} />
-            </section>
 
             <InvoiceTable
               items={items}
@@ -140,14 +212,27 @@ export default function HomePage() {
                 subtotal={subtotal}
                 taxRate={taxRate}
                 taxAmount={taxAmount}
-                discount={discount}
+                discountType={discountType}
+                discountValue={discountValue}
+                discountAmount={discountAmount}
                 total={total}
                 onTaxRateChange={setTaxRate}
-                onDiscountChange={setDiscount}
+                onDiscountTypeChange={setDiscountType}
+                onDiscountValueChange={setDiscountValue}
               />
             </div>
 
+            <PaymentSummaryCard
+              note={paymentNote}
+              onChange={setPaymentNote}
+              accountDetails={accountDetails}
+              onAccountDetailsChange={setAccountDetails}
+            />
+
             <FooterNote />
+            <p className="invoice-section mt-3 text-center text-xs text-slate-500 print:mt-2 print:text-[10px]">
+              This is a system-generated invoice and does not require a signature.
+            </p>
           </div>
         </main>
       </div>
