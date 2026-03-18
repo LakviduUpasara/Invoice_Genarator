@@ -63,7 +63,7 @@ export function InvoiceHeader({
   return (
     <header className="invoice-section grid gap-7 border-b border-slate-200 pb-7 md:grid-cols-2 print:grid-cols-2 print:gap-5 print:pb-3">
       <div className="space-y-3 print:space-y-2">
-        <div className="w-full max-w-[340px] p-0">
+        <div className="w-full max-w-[200px] p-0">
           {logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
