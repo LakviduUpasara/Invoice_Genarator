@@ -6,8 +6,8 @@ interface FooterNoteProps {
 
 export function FooterNote({ message = "Thank you for your business." }: FooterNoteProps) {
   return (
-    <footer className="invoice-section mt-10 rounded-xl border border-slate-200 bg-slate-100 p-4 text-center text-sm font-medium text-slate-700 print:mt-6">
-      {message}
+    <footer className="invoice-section mt-10 rounded-xl border border-slate-200 bg-slate-100 p-4 text-center text-sm font-medium text-slate-700 print:mt-3 print:p-3">
+      <p>{message}</p>
     </footer>
   );
 }

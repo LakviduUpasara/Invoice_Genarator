@@ -4,6 +4,7 @@
 
 body {
   @apply bg-slate-100 text-slate-900;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 @layer components {
@@ -54,7 +55,7 @@ body {
   }
 
   .print-page {
-    width: 194mm !important;
+    width: 100% !important;
     max-width: 194mm !important;
     margin: 0 auto !important;
     padding: 0 !important;
@@ -63,7 +64,7 @@ body {
   .print-surface {
     width: 100% !important;
     box-shadow: none !important;
-    border: 1px solid #e2e8f0 !important;
+    border: none !important;
     border-radius: 0 !important;
     margin: 0 !important;
   }
@@ -77,4 +78,45 @@ body {
     break-inside: avoid;
     page-break-inside: avoid;
   }
+}
+
+.pdf-export .print-surface {
+  box-shadow: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.pdf-export {
+  background: #ffffff !important;
+}
+
+.pdf-export .print-page {
+  width: 100% !important;
+  max-width: 194mm !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+
+.pdf-export .print\:hidden {
+  display: none !important;
+}
+
+.pdf-export .print\:block {
+  display: block !important;
+}
+
+.pdf-export .print\:inline {
+  display: inline !important;
+}
+
+.pdf-export .print\:flex {
+  display: flex !important;
+}
+
+.pdf-export .print\:grid {
+  display: grid !important;
+}
+
+.pdf-export .print\:text-right {
+  text-align: right !important;
 }
