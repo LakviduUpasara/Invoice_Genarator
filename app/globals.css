@@ -4,12 +4,13 @@
 
 body {
   @apply bg-slate-100 text-slate-900;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Roboto, "Segoe UI", Arial, Helvetica, sans-serif;
+  font-size: 80%;
 }
 
 @layer components {
   .invoice-input {
-    @apply w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100;
+    @apply w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-invoice-gold focus:ring-2 focus:ring-amber-100;
   }
 
   .invoice-textarea {
@@ -41,17 +42,40 @@ body {
     margin: 0 !important;
     padding: 0 !important;
     width: 100%;
+    height: auto !important;
+    overflow: visible !important;
   }
 
   body {
     background: #ffffff !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    font-size: 100% !important;
   }
 
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  .invoice-print-root,
+  .invoice-print-root * {
+    visibility: visible !important;
+  }
+
+  .invoice-print-root {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 194mm !important;
+    min-height: auto !important;
+    margin: 0 auto !important;
+    box-shadow: none !important;
+    overflow: visible !important;
   }
 
   .print-page {

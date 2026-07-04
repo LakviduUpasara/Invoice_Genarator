@@ -8,6 +8,8 @@ interface TotalsCardProps {
   discountValue: number;
   discountAmount: number;
   total: number;
+  paidAmount: number;
+  balanceDue: number;
   onTaxRateChange: (value: number) => void;
   onDiscountTypeChange: (value: "amount" | "percent") => void;
   onDiscountValueChange: (value: number) => void;
@@ -33,6 +35,8 @@ export function TotalsCard({
   discountValue,
   discountAmount,
   total,
+  paidAmount,
+  balanceDue,
   onTaxRateChange,
   onDiscountTypeChange,
   onDiscountValueChange
@@ -107,10 +111,24 @@ export function TotalsCard({
       <div className="my-4 border-t border-slate-200 print:my-2.5" />
 
       <div className="flex items-center justify-between">
-        <span className="text-base font-semibold text-slate-700 print:text-sm">Total</span>
-        <span className="text-2xl font-extrabold text-invoice-accent print:text-lg">
+        <span className="text-base font-semibold text-slate-700 print:text-sm">Invoice Total</span>
+        <span className="text-2xl font-extrabold text-invoice-primary print:text-lg">
           {formatCurrency(total)}
         </span>
+      </div>
+
+      <div className="mt-3 flex items-center justify-between text-sm print:mt-2 print:text-xs">
+        <span className="font-semibold text-emerald-700">Amount Paid</span>
+        <span className="font-extrabold text-emerald-700">{formatCurrency(paidAmount)}</span>
+      </div>
+
+      <div className="mt-3 border-t-2 border-invoice-gold pt-3 print:mt-2 print:pt-2">
+        <div className="flex items-center justify-between">
+          <span className="text-base font-black text-invoice-primary print:text-sm">Balance Due</span>
+          <span className="text-2xl font-black text-invoice-primary print:text-lg">
+            {formatCurrency(balanceDue)}
+          </span>
+        </div>
       </div>
     </section>
   );

@@ -8,12 +8,15 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Arial", "Helvetica", "sans-serif"]
+        sans: ["Roboto", "Segoe UI", "Arial", "Helvetica", "sans-serif"]
       },
       colors: {
         invoice: {
-          primary: "#0f2547",
-          accent: "#1d4ed8",
+          primary: "#071d3d",
+          accent: "#102f5d",
+          gold: "#d8aa3d",
+          goldLight: "#f5d97e",
+          goldSoft: "#fff7df",
           surface: "#f8fafc"
         }
       }

@@ -1,12 +1,41 @@
 {
   "name": "invoice-generator",
-  "version": "0.1.0",
+  "version": "5.1.0",
   "private": true,
+  "productName": "Futhreys POS V51",
+  "main": "electron/main.cjs",
   "scripts": {
     "dev": "next dev",
+    "electron": "set ELECTRON_RUN_AS_NODE=&& electron .",
+    "electron:dev": "set ELECTRON_RUN_AS_NODE=&& electron .",
     "build": "next build",
+    "dist": "npm run build && electron-builder --win portable",
     "start": "next start",
     "lint": "next lint"
+  },
+  "build": {
+    "appId": "com.futureys.pos.v51",
+    "productName": "Futhreys POS V51",
+    "asar": false,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "app/**/*",
+      "components/**/*",
+      "electron/**/*",
+      "types/**/*",
+      ".next/**/*",
+      "next.config.mjs",
+      "package.json",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "artifactName": "Futhreys POS V51.exe"
+    }
   },
   "dependencies": {
     "lucide-react": "^0.510.0",
@@ -20,6 +49,8 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
+    "electron": "^43.0.0",
+    "electron-builder": "^26.15.3",
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.35",
     "postcss": "^8.4.49",
